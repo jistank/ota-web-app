@@ -1,0 +1,18 @@
+### Operating System ###
+.DS_Store
+Thumbs.db
+desktop.ini
+
+### Editors ###
+.vscode/
+.idea/
+*.iml
+
+### Docker ###
+.env                # Docker secrets file
+.env.local
+.env.production
+
+### Logs ###
+*.log
+logs/
