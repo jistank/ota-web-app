@@ -1,1 +1,1 @@
-# Progetto React + Spring Boot
+# React - Spring Boot Project
