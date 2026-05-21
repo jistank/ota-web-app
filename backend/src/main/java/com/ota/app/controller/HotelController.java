@@ -1,5 +1,6 @@
 package com.ota.app.controller;
 
+import java.io.IOException;
 import java.security.PublicKey;
 import java.util.List;
 
@@ -15,8 +16,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.ota.app.model.Hotel;
 import com.ota.app.service.HotelService;
@@ -45,12 +48,26 @@ public class HotelController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
     
+    
+    @PostMapping
+    public ResponseEntity<?> createHotel(@RequestPart Hotel hotel, @RequestPart MultipartFile image){
+        Hotel saved = null;
+		try {
+			saved = hotelService.createHotel(hotel, image);
+			return new ResponseEntity<>(saved, HttpStatus.CREATED);
+		} catch (IOException e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+    }
+
+/*   
     @PostMapping
     public ResponseEntity<Hotel> createHotel(@RequestBody Hotel hotel) {
         Hotel saved = hotelService.createHotel(hotel);
         return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }
-    
+*/   
+
     @PutMapping("/{id}")
     public ResponseEntity<Hotel> updateHotel(@PathVariable Long id, @RequestBody Hotel hotel) {
         Hotel updated = hotelService.updateHotel(id, hotel);
