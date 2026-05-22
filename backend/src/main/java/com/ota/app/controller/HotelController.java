@@ -47,26 +47,28 @@ public class HotelController {
         else
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-    
+   
+    @GetMapping("hotel/{hotelId}/image")
+    public ResponseEntity<byte[]> getHotelImageByHotelId(@PathVariable Long hotelId) {
+    	Hotel hotel = hotelService.getHotelById(hotelId); 
+        if (hotel.getId() > 0) {
+            return new ResponseEntity<>(hotel.getImageData(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
     
     @PostMapping
     public ResponseEntity<?> createHotel(@RequestPart Hotel hotel, @RequestPart MultipartFile image){
         Hotel saved = null;
 		try {
-			saved = hotelService.createHotel(hotel, image);
+			saved = hotelService.createOrUpdateHotel(hotel, image);
 			return new ResponseEntity<>(saved, HttpStatus.CREATED);
 		} catch (IOException e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
     }
 
-/*   
-    @PostMapping
-    public ResponseEntity<Hotel> createHotel(@RequestBody Hotel hotel) {
-        Hotel saved = hotelService.createHotel(hotel);
-        return new ResponseEntity<>(saved, HttpStatus.CREATED);
-    }
-*/   
 
     @PutMapping("/{id}")
     public ResponseEntity<Hotel> updateHotel(@PathVariable Long id, @RequestBody Hotel hotel) {

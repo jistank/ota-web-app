@@ -1,11 +1,13 @@
 package com.ota.app.service;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.ota.app.model.Hotel;
 import com.ota.app.repo.HotelRepo;
@@ -24,7 +26,10 @@ public class HotelService {
         return hotelRepo.findById(id).orElse(null);
     }
 
-	public Hotel createHotel(Hotel hotel) {
+	public Hotel createOrUpdateHotel(Hotel hotel, MultipartFile image) throws IOException {
+		hotel.setImageName(image.getOriginalFilename());
+		hotel.setImageType(image.getContentType());
+		hotel.setImageData(image.getBytes());
 		return hotelRepo.save(hotel);
 	}
 
