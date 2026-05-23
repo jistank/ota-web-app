@@ -1,7 +1,6 @@
 package com.ota.app.model;
 
 import java.time.LocalDate;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -25,8 +24,15 @@ public class Booking {
 	private User user; // is needed the obj user
 	
 	@ManyToOne
-	@JoinColumn(name = "room_id", nullable = false)
+	@JoinColumn(name = "hotel_id", nullable = false)
+	private Hotel hotel;
+	
+	@ManyToOne
+	@JoinColumn(name = "room_number", nullable = false)
 	private Room room_id;
+	
+	@Column(nullable = false)
+	private LocalDate bookingDate; // <- when the booking was made
 	
 	@Column(nullable = false)
 	private LocalDate checkInDate;
@@ -37,11 +43,16 @@ public class Booking {
 	@Column(nullable = false)
 	private Double totalPrice;
 	
+	@Column(nullable = false, unique = true)
+	private String bookingCode;
+	
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
 	private BookingStatus status;
 
 	
+
+
 	public Booking() {}
 	
 	public Long getId() {
