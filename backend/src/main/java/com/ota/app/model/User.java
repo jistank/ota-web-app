@@ -5,6 +5,8 @@ import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -39,6 +41,10 @@ public class User {
     
     @OneToMany(mappedBy = "user")
     private List<Booking> bookings;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UserRole role;  // default ROLE_CLIENT
 
     
     public User() {}
@@ -113,10 +119,17 @@ public class User {
 	public void setBookings(List<Booking> bookings) {
 		this.bookings = bookings;
 	}
+	
+	public UserRole getRole() {
+	    return role;
+	}
+	public void setRole(UserRole role) {
+	    this.role = role;
+	}
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", email=" + email + ", password=" + password + ", firstName=" + firstName
+		return "User [id=" + id + ", email=" + email + ", firstName=" + firstName
 				+ ", lastName=" + lastName + ", phoneNumber=" + phoneNumber + ", createdAt=" + createdAt + ", bookings="
 				+ bookings + "]";
 	}
