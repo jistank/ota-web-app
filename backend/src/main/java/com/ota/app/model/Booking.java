@@ -1,6 +1,9 @@
 package com.ota.app.model;
 
 import java.time.LocalDate;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,6 +24,7 @@ public class Booking {
 	
 	@ManyToOne // bookings belong to one user
 	@JoinColumn(name = "user_id", nullable = false) // creates column "user_id" in database
+	@JsonIgnore // <============== prevents infinite recursion when serializing to JSON
 	private User user; // is needed the obj user
 	
 	@ManyToOne
@@ -111,11 +115,25 @@ public class Booking {
 		this.status = status;
 	}
 
+	public void setHotel(Hotel hotel) {
+		this.hotel = hotel;
+	}
+
+	public void setBookingDate(LocalDate now) {
+		this.bookingDate = now;
+	}
+
+	public void setBookingCode(String upperCase) {
+		this.bookingCode = upperCase;
+	}
+
 	@Override
 	public String toString() {
 		return "Booking [id=" + id + ", user=" + user + ", room_id=" + room_id + ", checkInDate=" + checkInDate
 				+ ", checkOutDate=" + checkOutDate + ", totalPrice=" + totalPrice + ", status=" + status + "]";
 	}
+
+
 	
 	
 }
