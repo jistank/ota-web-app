@@ -1,9 +1,13 @@
 package com.ota.app.controller;
 import com.ota.app.model.User;
+import com.ota.app.service.JwtService;
 import com.ota.app.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -14,6 +18,13 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    
+    @Autowired
+     private AuthenticationManager authenticationManager;
+    
+    @Autowired
+	private JwtService jwtService;
+    
 
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {
@@ -47,6 +58,18 @@ public class UserController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
         }
     }
+    
+    @PostMapping("/login")
+    public String login(@RequestBody User user) {
+    	Authentication auth = authenticationManager.authenticate(
+				new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
+    	if (auth.isAuthenticated()) {
+			return jwtService.generateToken(user.getEmail());
+		} else {
+			return "Login failed";
+		}
+	}
+
 
     @PutMapping("/{id}")
     public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user) {
