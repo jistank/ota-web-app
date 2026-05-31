@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import io.jsonwebtoken.JwtException;
@@ -19,7 +20,8 @@ import io.jsonwebtoken.security.Keys;
 @Service
 public class JwtService {
 	
-	private static final String SECRET = "bXlzdXBlcnNlY3JldGtleW15c2VjdXJlc2VjcmV0a2V5bXlzdXBlcnNlY3JldGtleQ=="; // 256-bit key (32 bytes) encoded in Base64
+	@Value("${jwt.secret}") // 256-bit key (32 bytes) encoded in Base64
+	private String secret; 
 	
 	public String generateToken(String email) {
 		Map<String, Object> claims = Map.of("email", email);
@@ -45,7 +47,7 @@ public class JwtService {
 	}
 
 	private Key getKey() {
-	    byte[] keyBytes = Decoders.BASE64.decode(SECRET);
+	    byte[] keyBytes = Decoders.BASE64.decode(secret);
 	    return Keys.hmacShaKeyFor(keyBytes);
 	}
 
