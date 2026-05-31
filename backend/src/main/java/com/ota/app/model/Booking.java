@@ -12,8 +12,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import jakarta.persistence.*;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity // tells JPA this is a database table
 @Table(name= "bookings") // table name in PostgreSQL
 public class Booking {
@@ -24,7 +30,7 @@ public class Booking {
 	
 	@ManyToOne // bookings belong to one user
 	@JoinColumn(name = "user_id", nullable = false) // creates column "user_id" in database
-	@JsonIgnore // <============== prevents infinite recursion when serializing to JSON
+	@JsonIgnore // prevents infinite recursion when serializing to JSON
 	private User user; // is needed the obj user
 	
 	@ManyToOne
@@ -32,11 +38,11 @@ public class Booking {
 	private Hotel hotel;
 	
 	@ManyToOne
-	@JoinColumn(name = "room_number", nullable = false)
+	@JoinColumn(name = "room_id", nullable = false)
 	private Room room_id;
 	
 	@Column(nullable = false)
-	private LocalDate bookingDate; // <- when the booking was made
+	private LocalDate bookingDate; // when the booking was made
 	
 	@Column(nullable = false)
 	private LocalDate checkInDate;
@@ -54,86 +60,10 @@ public class Booking {
 	@Column(nullable = false)
 	private BookingStatus status;
 
-	
-
-
-	public Booking() {}
-	
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-
-	public Room getRoom_id() {
-		return room_id;
-	}
-
-	public void setRoom_id(Room room_id) {
-		this.room_id = room_id;
-	}
-
-	public LocalDate getCheckInDate() {
-		return checkInDate;
-	}
-
-	public void setCheckInDate(LocalDate checkInDate) {
-		this.checkInDate = checkInDate;
-	}
-
-	public LocalDate getCheckOutDate() {
-		return checkOutDate;
-	}
-
-	public void setCheckOutDate(LocalDate checkOutDate) {
-		this.checkOutDate = checkOutDate;
-	}
-
-	public Double getTotalPrice() {
-		return totalPrice;
-	}
-
-	public void setTotalPrice(Double totalPrice) {
-		this.totalPrice = totalPrice;
-	}
-
-	public BookingStatus getStatus() {
-		return status;
-	}
-
-	public void setStatus(BookingStatus status) {
-		this.status = status;
-	}
-
-	public void setHotel(Hotel hotel) {
-		this.hotel = hotel;
-	}
-
-	public void setBookingDate(LocalDate now) {
-		this.bookingDate = now;
-	}
-
-	public void setBookingCode(String upperCase) {
-		this.bookingCode = upperCase;
-	}
 
 	@Override
 	public String toString() {
 		return "Booking [id=" + id + ", user=" + user + ", room_id=" + room_id + ", checkInDate=" + checkInDate
 				+ ", checkOutDate=" + checkOutDate + ", totalPrice=" + totalPrice + ", status=" + status + "]";
 	}
-
-
-	
-	
 }

@@ -12,7 +12,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity // indicates that this class is a JPA entity and will be mapped to a database table
 @Table(name = "rooms") // specifies the name of the database table to be used for mapping. If not specified, it defaults to the class name.
 public class Room {
@@ -38,54 +44,10 @@ public class Room {
     
     @Column(name = "room_number", nullable = false)
 	private String roomNumber;
-    
-    
-    public Room() {}
-    
-	
-	public Long getId() {
-		return id;
-	}
-	public void setId(Long id) {
-		this.id = id;
-	}
-	public Hotel getHotel() {
-		return hotel;
-	}
-	public void setHotel(Hotel hotel) {
-		this.hotel = hotel;
-	}
-	public RoomType getRoomType() {
-		return roomType;
-	}
-	public void setRoomType(RoomType roomType) {
-		this.roomType = roomType;
-	}
-	public Double getPricePerNight() {
-		return pricePerNight;
-	}
-	public void setPricePerNight(Double pricePerNight) {
-		this.pricePerNight = pricePerNight;
-	}
-	public Integer getMaxGuests() {
-		return maxGuests;
-	}
-	public void setMaxGuests(Integer maxGuests) {
-		this.maxGuests = maxGuests;
-	}
-	public String getRoomNumber() {
-		return roomNumber;
-	}
-	public void setRoomNumber(String roomNumber) {
-		this.roomNumber = roomNumber;
-	}
 	
 	@Override
 	public String toString() {
 		return "Room [id=" + id + ", hotel=" + hotel + ", roomType=" + roomType + ", pricePerNight=" + pricePerNight
 				+ ", maxGuests=" + maxGuests + ", roomNumber=" + roomNumber + "]";
 	}
-
-	
-	
 }
