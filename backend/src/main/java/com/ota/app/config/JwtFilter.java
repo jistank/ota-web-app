@@ -15,6 +15,7 @@ import com.ota.app.service.UserService;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -27,8 +28,6 @@ public class JwtFilter extends OncePerRequestFilter {
 	@Autowired
 	ApplicationContext context;
 
-
-
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 	        throws ServletException, IOException {
@@ -37,6 +36,18 @@ public class JwtFilter extends OncePerRequestFilter {
 	    String username = null;
 	    if (authHeader != null && authHeader.startsWith("Bearer ")) {
 	        token = authHeader.substring(7);
+	    } else {
+	        Cookie[] cookies = request.getCookies();
+	        if (cookies != null) {
+	            for (Cookie cookie : cookies) {
+	                if ("jwt".equals(cookie.getName())) {
+	                    token = cookie.getValue();
+	                    break;
+	                }
+	            }
+	        }
+	    }
+	    if (token != null) {
 	        username = jwtService.extractUsername(token);
 	    }
 	    if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -51,12 +62,4 @@ public class JwtFilter extends OncePerRequestFilter {
 	    filterChain.doFilter(request, response);
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-
 }
