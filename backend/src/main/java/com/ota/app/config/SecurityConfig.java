@@ -1,6 +1,6 @@
 package com.ota.app.config;
 
-import com.ota.app.service.CustomOAuth2UserService;
+// import com.ota.app.service.CustomOAuth2UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 
@@ -22,11 +22,11 @@ public class SecurityConfig {
 	@Autowired
 	private JwtFilter jwtFilter;
 	
-	@Autowired
-	private CustomOAuth2UserService customOAuth2UserService;
+	// @Autowired
+	// private CustomOAuth2UserService customOAuth2UserService;
 	
-	@Autowired
-	private OAuth2LoginSuccessHandler oauth2LoginSuccessHandler;
+	// @Autowired
+	// private OAuth2LoginSuccessHandler oauth2LoginSuccessHandler;
 	
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -34,14 +34,15 @@ public class SecurityConfig {
 		http.csrf(customizer -> customizer.disable())
 				.authorizeHttpRequests(request -> request
 			    .requestMatchers(HttpMethod.POST, "/users","/users/login").permitAll()
+			    .requestMatchers(HttpMethod.GET, "/hotels").permitAll() // Allow GET requests to /hotels without authentication TO REMOVE LATER
 			    .anyRequest().authenticated())
 				.httpBasic(Customizer.withDefaults())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
-				.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-				.oauth2Login(oauth2 -> oauth2
-				    .userInfoEndpoint(userInfo -> userInfo
-				        .userService(customOAuth2UserService))
-				    .successHandler(oauth2LoginSuccessHandler));
+				.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+				// .oauth2Login(oauth2 -> oauth2
+				//     .userInfoEndpoint(userInfo -> userInfo
+				//         .userService(customOAuth2UserService))
+				//     .successHandler(oauth2LoginSuccessHandler));
 
 		return http.build();
 	}

@@ -1,6 +1,7 @@
 package com.ota.app.controller;
 
 import com.ota.app.model.Booking;
+import com.ota.app.model.BookingRequest;
 import com.ota.app.model.BookingStatus;
 import com.ota.app.service.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,15 +59,15 @@ public class BookingController {
         return new ResponseEntity<>(bookingService.getBookingsByStatus(status), HttpStatus.OK);
     }
     
-    @PostMapping
-    public ResponseEntity<?> createBooking(
-            @RequestParam Long userId,
-            @RequestParam Long hotelId,
-            @RequestParam Long roomId,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkIn,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkOut) {
+    @PostMapping("/bookNow")
+    public ResponseEntity<?> createBooking(@RequestBody BookingRequest request) {
         try {
-            Booking created = bookingService.createBooking(userId, hotelId, roomId, checkIn, checkOut);
+            Booking created = bookingService.createBooking(
+                request.getUserId(),
+                request.getHotelId(),
+                request.getRoomId(),
+                request.getCheckIn(),
+                request.getCheckOut());
             return new ResponseEntity<>(created, HttpStatus.CREATED);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);

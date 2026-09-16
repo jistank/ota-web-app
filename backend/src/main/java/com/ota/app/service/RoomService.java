@@ -58,6 +58,10 @@ public class RoomService {
         roomRepository.deleteById(id);
         return true;
     }
+    
+    public Room getRoomById(Long id) {
+        return roomRepository.findById(id).orElse(null);
+    }
 
     public Room createRoomForHotel(Long hotelId, Room room) {
         Hotel hotel = hotelService.getHotelById(hotelId);

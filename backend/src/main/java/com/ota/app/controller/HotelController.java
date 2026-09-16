@@ -27,7 +27,8 @@ import com.ota.app.service.HotelService;
 
 @RestController
 @RequestMapping("/hotels")
-@CrossOrigin
+//@CrossOrigin
+@CrossOrigin(origins = "http://localhost:5173")
 public class HotelController {
 	
 	@Autowired
@@ -59,14 +60,16 @@ public class HotelController {
     }
     
     @PostMapping
-    public ResponseEntity<?> createHotel(@RequestPart Hotel hotel, @RequestPart MultipartFile image){
-        Hotel saved = null;
-		try {
-			saved = hotelService.createOrUpdateHotel(hotel, image);
-			return new ResponseEntity<>(saved, HttpStatus.CREATED);
-		} catch (IOException e) {
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+    public ResponseEntity<?> createHotel(
+            @RequestPart("hotel") Hotel hotel,
+            @RequestPart(value = "image", required = false) MultipartFile image) {
+
+        try {
+            Hotel saved = hotelService.createOrUpdateHotel(hotel, image);
+            return new ResponseEntity<>(saved, HttpStatus.CREATED);
+        } catch (IOException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 

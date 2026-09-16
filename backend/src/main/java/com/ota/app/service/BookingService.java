@@ -47,26 +47,22 @@ public class BookingService {
         return bookingRepo.findByStatus(status);
     }
 
-    public Booking createBooking(Long userId, Long hotelId, Long roomId, LocalDate checkIn, LocalDate checkOut) {
-
-        User user = userService.getUserById(userId);
+    public Booking createBooking(Booking booking) {
+        User user = userService.getUserById(booking.getUser().getId());
         if (user == null) throw new RuntimeException("User not found");
 
-        Hotel hotel = hotelService.getHotelById(hotelId);
+        Hotel hotel = hotelService.getHotelById(booking.getHotel().getId());
         if (hotel == null) throw new RuntimeException("Hotel not found");
 
-        Room room = (Room) roomService.getRoomsByHotelId(roomId); // < --------------- to fix, it is necessaire a method to book a specific room, not all rooms
+        Room room = roomService.getRoomById(booking.getRoom_id().getId());
         if (room == null) throw new RuntimeException("Room not found");
 
-        long nights = ChronoUnit.DAYS.between(checkIn, checkOut);
+        long nights = ChronoUnit.DAYS.between(booking.getCheckInDate(), booking.getCheckOutDate());
         double totalPrice = nights * room.getPricePerNight();
 
-        Booking booking = new Booking();
         booking.setUser(user);
         booking.setHotel(hotel);
         booking.setRoom_id(room);
-        booking.setCheckInDate(checkIn);
-        booking.setCheckOutDate(checkOut);
         booking.setBookingDate(LocalDate.now());
         booking.setTotalPrice(totalPrice);
         booking.setBookingCode(UUID.randomUUID().toString().substring(0, 8).toUpperCase());
@@ -87,4 +83,27 @@ public class BookingService {
         bookingRepo.deleteById(id);
         return true;
     }
+
+    public Booking createBooking(Long userId, Long hotelId, Long roomId, LocalDate checkIn, LocalDate checkOut) {
+        User user = userService.getUserById(userId);
+        if (user == null) throw new RuntimeException("User not found");
+        Hotel hotel = hotelService.getHotelById(hotelId);
+        if (hotel == null) throw new RuntimeException("Hotel not found");
+        Room room = roomService.getRoomById(roomId);
+        if (room == null) throw new RuntimeException("Room not found");
+        long nights = ChronoUnit.DAYS.between(checkIn, checkOut);
+        double totalPrice = nights * room.getPricePerNight();
+        Booking booking = new Booking();
+        booking.setUser(user);
+        booking.setHotel(hotel);
+        booking.setRoom_id(room);
+        booking.setCheckInDate(checkIn);
+        booking.setCheckOutDate(checkOut);
+        booking.setBookingDate(LocalDate.now());
+        booking.setTotalPrice(totalPrice);
+        booking.setBookingCode(UUID.randomUUID().toString().substring(0, 8).toUpperCase());
+        booking.setStatus(BookingStatus.PENDING);
+        return bookingRepo.save(booking);
+    }
+
 }
