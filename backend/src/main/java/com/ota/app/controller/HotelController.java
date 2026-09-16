@@ -27,6 +27,7 @@ import com.ota.app.service.HotelService;
 
 @RestController
 @RequestMapping("/hotels")
+
 //@CrossOrigin
 @CrossOrigin(origins = "http://localhost:5173")
 public class HotelController {
