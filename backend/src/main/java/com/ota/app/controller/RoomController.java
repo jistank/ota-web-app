@@ -24,7 +24,6 @@ import com.ota.app.service.RoomService;
 @CrossOrigin // allows cross-origin requests from any domain, which is useful for frontend applications hosted on different domains to access this API without CORS issues
 public class RoomController {
 
-	
     @Autowired
     private RoomService roomService;
     
